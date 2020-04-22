@@ -1,0 +1,78 @@
+<template>
+    <div id="search">
+        <div class="dropdown" style="display:inline">
+            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <router-link id="router-link" to="/" exact>Back to Login</router-link>
+            </div>
+        </div>
+    
+        <input type="search" v-on:input="search" id="search-note" placeholder="Search your notes" v-model="searchText">
+
+        <i style="cursor: pointer;" v-on:click="changeDisplay('list')" class="fa fa-list" aria-hidden="true"></i>
+        <i style="cursor: pointer;" v-on:click="changeDisplay('grid')" class="fa fa-th-large" aria-hidden="true"></i>
+        <i class="fa fa-user" aria-hidden="true"> Welcome, {{username}}</i>
+    </div>
+</template>
+
+<script>
+
+    import {eb} from '../main';
+
+    export default {
+        data() {
+            return {
+                username: this.$route.params.user,
+                searchText: ''
+            }
+        }, 
+        methods:{
+            changeDisplay(type) {
+                eb.$emit('changeDisplay', type);
+            },
+            search() {
+                eb.$emit('searchText', this.searchText);
+            }
+        }
+    }
+</script>
+
+<style>
+    
+    #search {
+        width: 100%;
+        background-color:  #f1f1f3;
+        border: 1px solid;
+        border-radius: 6px;
+        padding: 8px;
+    }
+
+    i:first-child{
+        margin-left: 25px;
+    }
+
+    i:not(:first-child) {
+        margin-left: 80px;
+    }
+
+    #search-note {
+        margin-left: 30px;
+        width: 50%;
+    }
+
+    #router-link {
+        display: block; 
+        width: 100%; 
+        padding: .25rem 1.5rem; 
+        clear: both; 
+        font-weight: 400; 
+        color: #212529; 
+        text-align: inherit; 
+        white-space: nowrap;
+        background-color: transparent;
+        border: 0;
+    }
+
+</style>
