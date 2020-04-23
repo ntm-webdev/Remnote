@@ -11,8 +11,8 @@
     
         <input type="search" v-on:input="search" id="search-note" placeholder="Search your notes" v-model="searchText">
 
-        <i style="cursor: pointer;" v-on:click="changeDisplay('list')" class="fa fa-list" aria-hidden="true"></i>
-        <i style="cursor: pointer;" v-on:click="changeDisplay('grid')" class="fa fa-th-large" aria-hidden="true"></i>
+        <span><i style="cursor: pointer;" v-on:click="changeDisplay('list')" class="fa fa-list" aria-hidden="true" ref="iconList"></i></span>
+        <span><i style="cursor: pointer;" v-on:click="changeDisplay('grid')" class="fa fa-th-large selectedDisplay" aria-hidden="true" ref="iconGrid"></i></span>
         <i class="fa fa-user" aria-hidden="true"> Welcome, {{username}}</i>
     </div>
 </template>
@@ -30,7 +30,16 @@
         }, 
         methods:{
             changeDisplay(type) {
+
                 eb.$emit('changeDisplay', type);
+
+                if (type == "list") {
+                    this.$refs.iconList.classList.add("selectedDisplay"); 
+                    this.$refs.iconGrid.classList.remove("selectedDisplay");
+                } else {
+                    this.$refs.iconList.classList.remove("selectedDisplay"); 
+                    this.$refs.iconGrid.classList.add("selectedDisplay");
+                }
             },
             search() {
                 eb.$emit('searchText', this.searchText);
@@ -73,6 +82,11 @@
         white-space: nowrap;
         background-color: transparent;
         border: 0;
+    }
+
+    .selectedDisplay {
+        border: 3px solid;
+        padding: 2px;
     }
 
 </style>

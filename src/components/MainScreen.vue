@@ -9,8 +9,8 @@
                 <button style="float:right;" v-on:click="openModal(note.type,index)">
                     <i class="fa fa-eye" aria-hidden="true"></i>
                 </button>
-                <p><b>{{note.title}}</b></p>
-                <p v-if="note.type == 'note'">{{note.body | abbreviate}}</p>
+                <p><b>{{note.title | abbreviate('title')}}</b></p>
+                <p v-if="note.type == 'note'">{{note.body | abbreviate('body')}}</p>
                 <ul v-else>
                     <li v-for="(todo, index) in getTodos(note.body)" :key=index>{{todo}}</li>
                 </ul>
@@ -59,8 +59,12 @@
             }
         },
         filters: {
-            abbreviate(text) {
-                return (text.length > 30) ? text.slice(0,30) + '...' : text;
+            abbreviate(text, type) {
+                if (type == 'title') {
+                     return (text.length > 15) ? text.slice(0,15) + '...' : text;
+                } else {
+                    return (text.length > 30) ? text.slice(0,30) + '...' : text;
+                }
             },
         },
         created() {
