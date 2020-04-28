@@ -67,6 +67,7 @@
                 this.clear();
                 
                 if (op == 'todo') {
+                    this.todoSelected = true;
                     this.$refs.note.style.display = "none";
                     this.$refs.check.style.display = "block";
 
@@ -77,6 +78,7 @@
                     }
 
                 } else if (op == 'note') {
+                    this.todoSelected = false;
                     this.$refs.check.style.display = "none";
                     this.$refs.note.style.display = "block";
 
@@ -90,7 +92,6 @@
                 //modal handling
                 this.$refs.modal.style.display = "block";
                 this.$refs.btnClose.addEventListener('click', () => { this.clear() });
-                this.$refs.btnSave.addEventListener('click', () => { this.clear() });
                 window.addEventListener('click', (event) => { (event.target == this.$refs.modal) ? this.clear() : null });
             },
             insertData(data) {
@@ -100,8 +101,15 @@
 
                     this.index = null;
                 } else {
-                    this.notes.push(data);
+                    if (!data.title || !data.body) {
+                        alert('Please fill all the fields');
+                        return false;
+                    } else { 
+                        this.notes.push(data);
+                    }
                 }
+
+                this.clear();
             },
             clear() {
                 this.$refs.modal.style.display = "none";
@@ -115,7 +123,6 @@
                 this.notes.splice(index, 1);
             },
             addToDo() {
-                this.todoSelected = true;
                 this.todo.push(this.notes.body);
                 
                 this.notes.body = '';
@@ -125,13 +132,12 @@
                 this.todo.splice(index, 1);
             }, 
             saveNote() {
-                if (this.todoSelected == true) {
+                if (this.todoSelected == true || this.$refs.check.style.display == "block") {
                     this.insertData({title: this.notes.title, body: this.todo.join(';'), type: 'todo'});
                 } else {
                     this.insertData({title: this.notes.title, body: this.notes.body, type: 'note'});
                 }
 
-                this.$refs.modal.style.display = 'none';
                 this.todoSelected = false;
                 this.todo = [];
             },
