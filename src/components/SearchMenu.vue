@@ -5,7 +5,7 @@
                 <i class="fa fa-bars" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <router-link id="router-link" to="/" exact>Back to Login</router-link>
+                <a id="router-link" v-on:click.prevent="backLogin">Back to Login</a>
             </div>
         </div>
     
@@ -43,6 +43,11 @@
             },
             search() {
                 eb.$emit('searchText', this.searchText);
+            },
+            backLogin() {
+                this.$router.push({
+                    name: 'login',
+                })
             }
         }
     }
@@ -82,6 +87,7 @@
         white-space: nowrap;
         background-color: transparent;
         border: 0;
+        cursor: pointer;
     }
 
     .selectedDisplay {

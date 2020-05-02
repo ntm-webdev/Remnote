@@ -3,7 +3,7 @@
         <div id="myModal" class="modal" ref="modal">
             <!-- Modal content -->
             <div class="modal-content">
-                <span class="close" ref="btnClose">&times;</span><br>
+                <span class="close" id="btnClose" ref="btnClose">&times;</span><br>
                 <form>
                     <div class="row">
                         <label for="inputName" class="col-sm-1 col-form-label"> Title</label>
@@ -31,7 +31,7 @@
                                 <button v-on:click.prevent="addToDo" class="btn btn-primary">Add</button>
                             </div>
                             <div id="preview-to-dos" class="col-sm-4" ref="previewTODOS">
-                                <ul ref="todoUL">
+                                <ul id="todoUL" ref="todoUL">
                                     <li v-for="(todo, index) in todo" :key="index"> {{todo}} <a href="#" v-on:click.stop.prevent="removeToDo(index)" class="text-danger"> (Remove)</a></li>
                                 </ul>
                             </div>
@@ -68,8 +68,8 @@
                 
                 if (op == 'todo') {
                     this.todoSelected = true;
-                    this.$refs.note.style.display = "none";
-                    this.$refs.check.style.display = "block";
+                    document.querySelector("#note").style.display = "none";
+                    document.querySelector("#check").style.display = "block";
 
                     if (index != null) {
                         this.notes.title = this.notes[index].title;
@@ -79,20 +79,20 @@
 
                 } else if (op == 'note') {
                     this.todoSelected = false;
-                    this.$refs.check.style.display = "none";
-                    this.$refs.note.style.display = "block";
+                    document.querySelector("#check").style.display = "none";
+                    document.querySelector("#note").style.display = "block";
 
                     if (index != null) {
-                        this.$refs.txtTitle.value = this.notes[index].title;
+                        this.notes.title = this.notes[index].title;
                         document.querySelectorAll('.txtBody')[0].value = this.notes[index].body;
                         this.index = index;
                     }
                 }
                 
                 //modal handling
-                this.$refs.modal.style.display = "block";
-                this.$refs.btnClose.addEventListener('click', () => { this.clear() });
-                window.addEventListener('click', (event) => { (event.target == this.$refs.modal) ? this.clear() : null });
+                document.querySelector("#myModal").style.display = "block";
+                document.querySelector("#btnClose").addEventListener('click', () => { this.clear() });
+                window.addEventListener('click', (event) => { (event.target == document.querySelector("#myModal")) ? this.clear() : null });
             },
             insertData(data) {
                 if (this.index != null) {
@@ -112,11 +112,11 @@
                 this.clear();
             },
             clear() {
-                this.$refs.modal.style.display = "none";
-                this.$refs.txtTitle.value = "";
+                document.querySelector("#myModal").style.display = "none";
+                document.querySelector("#txtTitle").value = "";
                 document.querySelectorAll('.txtBody')[0].value = '';
                 document.querySelectorAll('.txtBody')[1].value = '';
-                this.$refs.todoUL.innerHTML = '';
+                document.querySelector("#todoUL").innerHTML = '';
                 this.index = null;
             },
             removeNote(index) {
@@ -132,7 +132,7 @@
                 this.todo.splice(index, 1);
             }, 
             saveNote() {
-                if (this.todoSelected == true || this.$refs.check.style.display == "block") {
+                if (this.todoSelected == true || document.querySelector("#check").style.display == "block") {
                     this.insertData({title: this.notes.title, body: this.todo.join(';'), type: 'todo'});
                 } else {
                     this.insertData({title: this.notes.title, body: this.notes.body, type: 'note'});
