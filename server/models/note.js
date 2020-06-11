@@ -8,6 +8,7 @@ const noteSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
     name: String,
+    pwd: String,
     notes: [noteSchema]
 });
 

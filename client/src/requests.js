@@ -30,6 +30,12 @@ class Requests {
     static async deleteNote(obj) {
         await axios.post(url+'deleteNote/', obj);
     }
+
+    static async registerAccount(obj) {
+        const account = await axios.post(url+'registerAccount/', obj);
+        
+        return account.data;
+    }
  
 }
 

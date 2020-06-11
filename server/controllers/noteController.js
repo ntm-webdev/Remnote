@@ -59,4 +59,14 @@ module.exports = {
         res.json(notesData);
     },
 
+    async registerAccount(req, res) {
+        await notes.create({
+            name: req.body.username,
+            pwd: req.body.pwd,
+            notes: []
+        });
+
+        res.send('The user was created successfully, You will be redirected to login page');
+    }
+
 };

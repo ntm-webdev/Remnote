@@ -20,6 +20,10 @@
             <p v-if="error != ''">{{error}}</p>
         </div>
 
+        <div v-if="success != ''" class="alert alert-success" role="alert">
+            <p>{{success}}</p>
+        </div>
+
         <br>
         <div class="form-group">
             <a id="button" class="btn btn-success" v-on:click.prevent="register">Register</a>
@@ -29,10 +33,13 @@
 
 <script>
 
+    import request from '../requests';
+
     export default {
         data() {
             return {
                 errors: [],
+                success: '',
                 pwd: '',
                 cpwd:'',
                 username:''
@@ -60,15 +67,17 @@
                 } 
             },
 
-            register() {
+            async register() {
                 this.validation();
 
                 if (this.errors.length <= 0) {
-                    alert('Registration complete! Sending you to the Login page');
+                    this.success = await request.registerAccount({username: this.username, pwd: this.pwd});
                     
-                    this.$router.push({
-                        name: 'login'
-                    });
+                    window.setTimeout(() => {
+                        this.$router.push({
+                            name: 'login'
+                        });
+                    }, 2800);
                 }
             }
         }
