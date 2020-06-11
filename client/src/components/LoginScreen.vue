@@ -30,6 +30,8 @@
 
 <script>
 
+    import request from '../requests';
+
     export default {
         data() {
             return {
@@ -39,17 +41,23 @@
             }
         },
         methods: {
-            goHome() {
+            async goHome() {
                 if (!this.username || !this.pwd) {
                     this.error = 'Please fill the username and/or password';
                 } else {
                     this.error = '';
-                    this.$router.push({
-                        name: 'home',
-                        params: {
-                            user: this.username
-                        }
-                    });
+                    
+                    let authenticated = await request.validateLogin({username: this.username, pwd: this.pwd});
+                    if (!authenticated) {
+                        this.$router.push({
+                            name: 'home',
+                            params: {
+                                user: this.username
+                            }
+                        });
+                    } else {
+                        this.error = 'Username and/or password are incorrect';
+                    }
                 }   
             },
 

@@ -67,6 +67,12 @@ module.exports = {
         });
 
         res.send('The user was created successfully, You will be redirected to login page');
+    },
+
+    async validateLogin(req, res) {
+        const user = await notes.find({name: req.body.username, pwd: req.body.pwd});
+
+        res.send(user == '');
     }
 
 };

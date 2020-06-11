@@ -36,6 +36,12 @@ class Requests {
         
         return account.data;
     }
+
+    static async validateLogin(obj) {
+        const account = await axios.post(url+'validateLogin/', obj);
+        
+        return account.data;
+    }
  
 }
 

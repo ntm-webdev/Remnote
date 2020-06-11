@@ -9,5 +9,6 @@ route.get('/showNote/:idUser/:idNote', noteController.findOneNoteById);
 route.post('/updateNote', noteController.updateNote);
 route.post("/deleteNote", noteController.deleteNote);
 route.post("/registerAccount", noteController.registerAccount);
+route.post("/validateLogin", noteController.validateLogin);
 
 module.exports = route;
