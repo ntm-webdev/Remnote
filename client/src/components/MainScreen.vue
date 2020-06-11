@@ -1,12 +1,11 @@
 <template>
     <div id="main" style="overflow: hidden;">
-
         <div v-for="(note, index) in getNotes" :key="index">
             <div :class="note.type" class="notes" v-if="display == 'grid'">
                 <button style="float:right;" v-on:click="removeNote(note._id)">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
-                <button style="float:right;" v-on:click="openModal(note.type, note._id)">
+                <button style="float:right;" v-on:click="openModal(note.type, userId, note._id)">
                     <i class="fa fa-eye" aria-hidden="true"></i>
                 </button>
                 <p><b>{{note.title | abbreviate('title')}}</b></p>
@@ -21,7 +20,7 @@
                 <button style="float:right;" v-on:click="removeNote(note._id)">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
-                <button style="float:right;" v-on:click="openModal(note.type, note._id)">
+                <button style="float:right;" v-on:click="openModal(note.type, userId, note._id)">
                     <i class="fa fa-eye" aria-hidden="true"></i>
                 </button>
             </div>
@@ -40,14 +39,15 @@
                 display: 'grid',
                 notes: [],
                 arrAux: [],
+                userId: this.$route.params.userId,
             }
         },
         methods: {
             removeNote(index) {
                 eb.$emit('removeNote', index);
             },
-            openModal(type, index) {
-                eb.$emit('openModal', type, index);
+            openModal(type, userId, noteId) {
+                eb.$emit('openModal', type, userId, noteId);
             },
             getTodos(t) {
                 let arrAuxTodo = t.split(";");
@@ -58,7 +58,7 @@
 
             },
             async getUpdatedNotes() {
-                this.notes = await requests.showAllNotes();
+                this.notes = await requests.showAllNotes(this.userId);
                 return this.notes;
             }
         },
@@ -73,7 +73,7 @@
         },
         async created() {
 
-            this.notes = await requests.showAllNotes();
+            this.notes = await requests.showAllNotes(this.userId);
 
             eb.$on('changeDisplay', (display) => { this.display = display });
             

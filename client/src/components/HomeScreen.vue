@@ -3,7 +3,7 @@
         <br>
         <sm></sm>
         <ms></ms>
-        <im></im>
+        <im :userId="userId"></im>
         <m></m>
     </div>
 </template>
@@ -20,6 +20,11 @@
             ms,
             m,
             im
+        },
+        data() {
+            return {
+                userId: this.$route.params.userId,
+            }
         }
     }
 </script>

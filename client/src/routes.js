@@ -20,7 +20,7 @@ export default [
     },
     {
         name: 'home',
-        path: '/:user',
+        path: '/:user/:userId',
         component: homeScreen
     },
 ]

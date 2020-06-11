@@ -3,8 +3,8 @@ const url = 'http://localhost:3000/';
 
 class Requests {
 
-    static async showAllNotes() {
-        const notes = await axios.get(url);
+    static async showAllNotes(userId) {
+        const notes = await axios.get(url+userId);
 
         const data = notes.data.map((el) => {
             return el.notes;
@@ -13,8 +13,8 @@ class Requests {
         return data[0];
     }
 
-    static async findOneNoteById(idUser, idNote) {
-        const notes = await axios.get(url+'showNote/'+idUser+'/'+idNote);
+    static async findOneNoteById(userId, noteId) {
+        const notes = await axios.get(url+'findOneNoteById/'+userId+'/'+noteId);
 
         return notes.data;
     }
@@ -39,8 +39,7 @@ class Requests {
 
     static async validateLogin(obj) {
         const account = await axios.post(url+'validateLogin/', obj);
-        
-        return account.data;
+        return account.data[0];
     }
  
 }

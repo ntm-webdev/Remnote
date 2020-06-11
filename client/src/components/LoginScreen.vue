@@ -47,12 +47,13 @@
                 } else {
                     this.error = '';
                     
-                    let authenticated = await request.validateLogin({username: this.username, pwd: this.pwd});
-                    if (!authenticated) {
+                    var idUserUserauthenticated = await request.validateLogin({username: this.username, pwd: this.pwd});
+                    if (idUserUserauthenticated != undefined) {
                         this.$router.push({
                             name: 'home',
                             params: {
-                                user: this.username
+                                user: this.username,
+                                userId: idUserUserauthenticated._id
                             }
                         });
                     } else {

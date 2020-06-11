@@ -61,23 +61,29 @@
                 index: null,
                 notes: [],
                 todo: [],
+                userId: ''
             }
         },
         methods: {
-            async openModal(op,index) {
-                this.clear();
-
-                const data = await requests.findOneNoteById('5edeba30e760f60fc88e858c', index); 
+            async openModal(op, userId, noteId) {
+                this.clear(); 
+                this.userId = userId;
+                
+                if (noteId != null) {
+                    var data = await requests.findOneNoteById(userId, noteId);
+                } else {
+                    data = "";   
+                }
                 
                 if (op == 'todo') {
                     this.todoSelected = true;
                     document.querySelector("#note").style.display = "none";
                     document.querySelector("#check").style.display = "block";
 
-                    if (index != null) {
-                        window.setTimeout(() => { document.querySelector("#txtTitle").value = data[0].title}, 5);
+                    if (noteId != null) {
+                        window.setTimeout(() => { document.querySelector("#txtTitle").value = data[0].title }, 5);
                         this.todo = data[0].body.split(';');
-                        this.index = index;
+                        this.index = noteId;
                     }
 
                 } else if (op == 'note') {
@@ -85,10 +91,10 @@
                     document.querySelector("#check").style.display = "none";
                     document.querySelector("#note").style.display = "block";
 
-                    if (index != null) {
+                    if (noteId != null) {
                         this.$refs.txtTitle.value = data[0].title;
                         document.querySelectorAll('.txtBody')[0].value = data[0].body;
-                        this.index = index;
+                        this.index = noteId;
                     }
                 }
                 
@@ -99,18 +105,18 @@
             },
             async insertData(data) {
                 if (this.index != null) {
-                    await requests.updateNote({title: data.title, body: data.body, type: data.type, id_user: '5edeba30e760f60fc88e858c', id_note: this.index});
+                    await requests.updateNote({title: data.title, body: data.body, type: data.type, userId: this.userId, noteId: this.index});
                     this.index = null;
                 } else {
                     if (!data.title || !data.body) {
                         alert('Please fill all the fields');
                         return false;
                     } else { 
-                        await requests.addNote({title: data.title, body: data.body, type: data.type, id_user: '5edeba30e760f60fc88e858c'});
+                        await requests.addNote({title: data.title, body: data.body, type: data.type, userId: this.userId});
                     }
                 }
 
-                this.notes = await requests.showAllNotes();
+                this.notes = await requests.showAllNotes(this.userId);
                 eb.$emit('notesUpdated');
                 this.clear();
             },
@@ -124,7 +130,7 @@
             },
             async removeNote(index) {
                 await requests.deleteNote({id: index});
-                this.notes = await requests.showAllNotes();
+                this.notes = requests.showAllNotes(this.userId);
                 eb.$emit('notesUpdated');
             },
             addToDo() {
@@ -148,8 +154,8 @@
             },
         },
         created() {
-            eb.$on('openModal', (op, index) => {
-                this.openModal(op,index);
+            eb.$on('openModal', (op, userId, noteId) => {
+                this.openModal(op, userId, noteId);
             });
             
             eb.$on('removeNote', (index) => {

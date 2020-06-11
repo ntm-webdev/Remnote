@@ -1,10 +1,9 @@
 <template>
     <div id="menu">
         <div id="btn-group">
-            <button v-on:click="openModal('note',null)"><i class="fa fa-plus" aria-hidden="true"></i></button>
-            <button v-on:click="openModal('todo',null)"><i class="fa fa-check" aria-hidden="true"></i></button>
+            <button v-on:click="openModal('note',userId,null)"><i class="fa fa-plus" aria-hidden="true"></i></button>
+            <button v-on:click="openModal('todo',userId,null)"><i class="fa fa-check" aria-hidden="true"></i></button>
         </div>
-
         <div>
             <span style="margin-left: 15px;">Use this application to keep all your ideas. You can add a note or a TO-DO, with this app it´s impossible to forget anything!!!</span>
         </div>
@@ -24,9 +23,10 @@
                 todoSelected: false 
             }
         },
+        props: ['userId'],
         methods: {
-            openModal(op, index) {
-               eb.$emit('openModal', op, index);
+            openModal(op, userId, noteId) {
+               eb.$emit('openModal', op, userId, noteId);
             },
         }   
     }

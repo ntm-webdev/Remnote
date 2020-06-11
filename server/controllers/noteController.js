@@ -3,37 +3,37 @@ const notes = require('../models/note');
 module.exports = {
 
     async addNote(req,res) {
-        const notesData = await notes.findById(req.body.id_user);
-        
-        notesData.notes.push({
-            title: req.body.title,
-            body: req.body.body,
-            type: req.body.type
-        });
+        await notes.findOneAndUpdate({_id: req.body.userId}, 
+            { 
+                $push: {
+                    "notes": { 
+                        title: req.body.title,
+                        body: req.body.body,
+                        type: req.body.type
+                    }
+                }
+            }
+        );
 
-        notesData.save((err) => {
-            if (err) return console.error(err);
-        });
-
-        res.json(await notes.find());
+        res.send('The note was saved successfully');
     },
 
     async showAllNotes(req, res) {
-        const notesData = await notes.find();
+        const notesData = await notes.find({_id: req.params.userId});
 
         res.json(notesData);
     },
 
     async findOneNoteById(req, res) {
-        const notesData = await notes.findById(req.params.idUser);
+        const notesData = await notes.findById(req.params.userId);
         
         res.json(notesData.notes.filter(el => {
-            return el._id == req.params.idNote
+            return el._id == req.params.noteId
         }));
     },
 
     async updateNote(req,res) {
-        await notes.updateOne({'notes._id': req.body.id_note}, {   
+        await notes.updateOne({'notes._id': req.body.noteId}, {   
                 '$set': {
                     'notes.$.title': req.body.title,
                     'notes.$.body': req.body.body,
@@ -42,8 +42,7 @@ module.exports = {
             }
         );
 
-        const notesData = await notes.find();
-        res.json(notesData);
+        res.send('Updated successfully');
     },
 
     async deleteNote(req, res) {
@@ -72,7 +71,7 @@ module.exports = {
     async validateLogin(req, res) {
         const user = await notes.find({name: req.body.username, pwd: req.body.pwd});
 
-        res.send(user == '');
+        res.json(user);
     }
 
 };
